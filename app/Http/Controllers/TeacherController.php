@@ -44,7 +44,7 @@ class TeacherController extends Controller
 
         } catch (\Throwable $th) {
             //throw $th;
-            return redirect()->back()->with('error', 'Lỗi chưa xác định');
+            return redirect()->back()->with('error', 'Lỗi khi đăng nhập hệ thống');
         }
     }
 

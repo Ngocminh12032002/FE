@@ -120,7 +120,7 @@
 
         // Nếu không hợp lệ, hiển thị thông báo
         if (!isValid) {
-            alert('Dữ liệu không hợp lệ. Vui lòng nhập số nguyên từ 0 đến 10.');
+            alert('Hệ thống báo dữ liệu không hợp lệ. Vui lòng nhập lại');
         }
 
         return isValid;
