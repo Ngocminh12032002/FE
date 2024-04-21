@@ -70,16 +70,17 @@
             });
 
             $('#all-student').click(function () {
-                window.location.href = '/danh-sach-sinh-vien-theo-dieu-kien/' + {{ $listStudent[0]->student->subject_class_id }} + '/{0}' ;
+                window.location.href = '/danh-sach-sinh-vien-theo-dieu-kien/' + {{ $subjectClassID }} + '/{0}' ;
             });
 
             $('#passed').click(function () {
-                window.location.href = '/danh-sach-sinh-vien-theo-dieu-kien/' + {{ $listStudent[0]->student->subject_class_id }} + '/{1}';
+                window.location.href = '/danh-sach-sinh-vien-theo-dieu-kien/' + {{ $subjectClassID }} + '/{1}';
             });
 
             $('#failed').click(function () {
-                window.location.href = '/danh-sach-sinh-vien-theo-dieu-kien/' + {{ $listStudent[0]->student->subject_class_id }} + '/{2}';
+                window.location.href = '/danh-sach-sinh-vien-theo-dieu-kien/' + {{ $subjectClassID }} + '/{2}';
             });
+
         });
 
 
@@ -87,53 +88,20 @@
         //         window.location.href = '/danh-sach-lop';
         // });
 
-        function validateForm(studentId) {
-        var isValid = true;
-
-        // Kiểm tra và validate các trường dữ liệu trong form
-        // Nếu dữ liệu không hợp lệ, cập nhật nội dung của modal alert và hiển thị
-        // Nếu dữ liệu hợp lệ, trả về true để submit form
-
-        // Kiểm tra trường "Điểm chuyên cần"
-        var attendance = $('#attendance' + studentId).val();
-        if (!validateInput(attendance)) {
-            isValid = false;
-        }
-
-        // Kiểm tra trường "Điểm kiểm tra"
-        var test = $('#test' + studentId).val();
-        if (!validateInput(test)) {
-            isValid = false;
-        }
-
-        // Kiểm tra trường "Điểm bài tập"
-        var assignment = $('#assignment' + studentId).val();
-        if (!validateInput(assignment)) {
-            isValid = false;
-        }
-
-        // Kiểm tra trường "Điểm thi"
-        var exam = $('#exam' + studentId).val();
-        if (!validateInput(exam)) {
-            isValid = false;
-        }
-
-        // Nếu không hợp lệ, hiển thị thông báo
-        if (!isValid) {
-            alert('Hệ thống báo dữ liệu không hợp lệ. Vui lòng nhập lại');
-        }
-
-        return isValid;
-        }
-
-        function validateInput(input) {
-            // Kiểm tra xem input có chứa ký tự đặc biệt hoặc không nằm trong phạm vi từ 0 đến 10 không
-            var regex = /^[0-9]{1,2}$/;
-            return regex.test(input) && parseInt(input) >= 0 && parseInt(input) <= 10;
-        }
-
-
     </script>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            document.querySelector('input[name="keyword"]').addEventListener("keypress", function(event) {
+                if (event.key === "Enter") { // Kiểm tra nếu phím được nhấn là Enter
+                    event.preventDefault(); // Ngăn chặn hành động mặc định của phím Enter
+                    this.closest('form').submit(); // Gọi hàm submit của form chứa input
+                }
+            });
+        });
+    </script>
+
+
 
 
 
@@ -167,35 +135,36 @@
                                         <div class="d-flex align-items-center justify-content-center gap-4 me-3">
                                             <div class=>
                                                 <label class="d-flex align-items-center justify-content-center form-check-label gap-2">
-                                                    <input type="radio" id="all-student" style="display: inline-block !important" name="radio-select" class="filter-radio"/>
+                                                    <input type="radio" id="all-student" style="display: inline-block !important" name="condition" class="filter-radio" value="0"/>
                                                     <span>Tất cả sinh viên</span>
                                                 </label>
                                             </div>
 
                                             <div class=>
                                                 <label class="d-flex align-items-center justify-content-center form-check-label gap-2">
-                                                    <input type="radio" id="passed" style="display: inline-block !important" name="radio-select" class="filter-radio"/>
+                                                    <input type="radio" id="passed" style="display: inline-block !important" name="condition" class="filter-radio" value="1"/>
                                                     <span>Đủ điều kiện dự thi</span>
                                                 </label>
                                             </div>
 
                                             <div class=>
                                                 <label class="d-flex align-items-center justify-content-center form-check-label gap-2">
-                                                    <input type="radio" id="failed" style="display: inline-block !important" name="radio-select" class="filter-radio"/>
+                                                    <input type="radio" id="failed" style="display: inline-block !important" name="condition" class="filter-radio" value="2"/>
                                                     <span>Không đủ điều kiện dự thi</span>
                                                 </label>
                                             </div>
                                         </div>
-
                                         <div class="action_wrapper d-flex justify-content-end align-items-center ">
                                             <div class="d-flex justify-content-between align-items-center mx-3">
 
-                                                <form method="GET" action="#">
+                                                <form method="POST" action="{{ route('listStudentByKey', $subjectClassID) }}">
+                                                    @csrf
+                                                    @method('PUT')
                                                     <div class="form-group has-search">
                                                         <span type="submit"
                                                             class="bi bi-search form-control-feedback fs-5"></span>
-                                                        <input type="text" class="form-control" placeholder="Tìm kiếm"
-                                                            value="" name="q">
+                                                        <input type="text" class="form-control" placeholder="Tìm theo tên, mã SV" name="keyword">
+                                                        <input type="text" class="form-control" value="{{$statusFilter}}" name="statusFilter" style="display: none ">
                                                     </div>
                                                 </form>
                                             </div>
@@ -421,7 +390,7 @@
                     <h5 class="modal-title w-100" id="exampleModalLabel">Sửa điểm</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <form id="formNhapdiem" method="POST" action="{{ route('nhapdiem', $value->student->id ) }}"
+                <form id="formNhapdiem_{{ $value->student->id }}" method="POST" action="{{ route('nhapdiem', $value->student->id) }}"
                     enctype="multipart/form-data" onsubmit="return validateForm('{{ $value->student->id }}')">
                     @csrf
                     @method('PUT')
@@ -433,65 +402,40 @@
                             <div class="col-md-12 mb-3" data-bs-toggle="tooltip" data-bs-placement="top"
                                 title="Điểm chuyên cần">
                                 <input type="text" name="attendance" data-bs-toggle="tooltip"
-                                    id="" data-bs-placement="top" title="Điểm chuyên cần"
+                                    id="attendance_{{ $value->student->id }}" data-bs-placement="top" title="Điểm chuyên cần"
                                     placeholder="Điểm chuyên cần" class="form-control mb-1 attendance" value="{{ $value->mark->attendance ?? '' }}">
+                                <div id="attendanceError_{{ $value->student->id }}" class="text-danger"></div>
                             </div>
-                            <!-- <div class="col-md-6 mb-3" data-bs-toggle="tooltip" data-bs-placement="top"
-                                title="Hệ số điểm">
-                                <input type="text" name="attendanceFactor" data-bs-toggle="tooltip"
-                                    id="attendanceFactor" data-bs-placement="top" title="Hệ số điểm"
-                                    placeholder="Hệ số điểm" class="form-control mb-1">
-                            </div> -->
-
                             <div class="col-md-12 mb-3">
                                 <div class="card-title">2. Điểm kiểm tra</div>
                             </div>
                             <div class="col-md-12 mb-3" data-bs-toggle="tooltip" data-bs-placement="top"
                                 title="Điểm kiểm tra">
                                 <input type="text" name="test" data-bs-toggle="tooltip"
-                                    id="" data-bs-placement="top" title="Điểm kiểm tra"
+                                    id="test_{{ $value->student->id }}" data-bs-placement="top" title="Điểm kiểm tra"
                                     placeholder="Điểm kiểm tra" class="form-control mb-1 test" value="{{ $value->mark->test ?? '' }}">
+                                <div id="testError_{{ $value->student->id }}" class="text-danger"></div>
                             </div>
-                            <!-- <div class="col-md-6 mb-3" data-bs-toggle="tooltip" data-bs-placement="top"
-                                title="Hệ số điểm">
-                                <input type="text" name="testFactor" data-bs-toggle="tooltip"
-                                    id="testFactor" data-bs-placement="top" title="Hệ số điểm"
-                                    placeholder="Hệ số điểm" class="form-control mb-1">
-                            </div> -->
-
                             <div class="col-md-12 mb-3">
                                 <div class="card-title">3. Điểm bài tập</div>
                             </div>
                             <div class="col-md-12 mb-3" data-bs-toggle="tooltip" data-bs-placement="top"
                                 title="Điểm bài tập">
                                 <input type="text" name="assignment" data-bs-toggle="tooltip"
-                                    id="" data-bs-placement="top" title="Điểm bài tập"
+                                    id="assignment{{ $value->student->id }}" data-bs-placement="top" title="Điểm bài tập"
                                     placeholder="Điểm bài tập" class="form-control mb-1 assignment" value="{{ $value->mark->assignment ?? '' }}">
+                                <div id="assignmentError_{{ $value->student->id }}" class="text-danger"></div>
                             </div>
-                            <!-- <div class="col-md-6 mb-3" data-bs-toggle="tooltip" data-bs-placement="top"
-                                title="Hệ số điểm">
-                                <input type="text" name="assignmentFactor" data-bs-toggle="tooltip"
-                                    id="assignmentFactor" data-bs-placement="top" title="Hệ số điểm"
-                                    placeholder="Hệ số điểm" class="form-control mb-1">
-                            </div> -->
-
-
                             <div class="col-md-12 mb-3">
                                 <div class="card-title">4. Điểm thi</div>
                             </div>
                             <div class="col-md-12 mb-3" data-bs-toggle="tooltip" data-bs-placement="top"
                                 title="Điểm thi">
                                 <input type="text" name="exam" data-bs-toggle="tooltip"
-                                    id="" data-bs-placement="top" title="Điểm thi"
+                                    id="exam{{ $value->student->id }}" data-bs-placement="top" title="Điểm thi"
                                     placeholder="Điểm thi" class="form-control mb-1 exam" value="{{ $value->mark->exam ?? '' }}">
+                                <div id="examError_{{ $value->student->id }}" class="text-danger"></div>
                             </div>
-                            <!-- <div class="col-md-6 mb-3" data-bs-toggle="tooltip" data-bs-placement="top"
-                                title="Hệ số điểm">
-                                <input type="text" name="examFactor" data-bs-toggle="tooltip"
-                                    id="examFactor" data-bs-placement="top" title="Hệ số điểm"
-                                    placeholder="Hệ số điểm" class="form-control mb-1">
-                            </div> -->
-
                         </div>
                     </div>
                     <div class="modal-footer d-flex align-items-center justify-content-between">
@@ -507,8 +451,37 @@
             </div>
         </div>
     </div>
-    @endforeach
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            var inputs = document.querySelectorAll('#formNhapdiem_{{ $value->student->id }} input[type="text"]');
 
+            inputs.forEach(function(input) {
+                input.addEventListener('blur', function() {
+                    var value = this.value;
+                    var fieldName = this.name;
+                    var studentId = '{{ $value->student->id }}';
+                    var errorMessageId = fieldName + 'Error_' + studentId;
+
+                    if (!isValidInput(value)) {
+                        document.getElementById(errorMessageId).innerText = "Trường điểm phải là số từ 0 đến 10";
+                        this.value = '';
+                        this.focus();
+                    } else {
+                        document.getElementById(errorMessageId).innerText = ""; // Xóa cảnh báo nếu giá trị hợp lệ
+                    }
+                });
+            });
+
+            function isValidInput(value) {
+                if (isNaN(value)) {
+                    return false;
+                }
+                var numericValue = parseFloat(value);
+                return numericValue >= 0 && numericValue <= 10;
+            }
+        });
+    </script>
+    @endforeach
 
 
 
@@ -549,6 +522,8 @@
         </div>
     </div>
     @endforeach
+
+
 
 @endsection
 @section('footer-script')

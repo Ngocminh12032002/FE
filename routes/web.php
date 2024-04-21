@@ -22,7 +22,7 @@ Route::get('/', function () {
 
 Route::post('/', [TeacherController::class, 'login'])->name('login');
 
-Route::get('/man-hinh-chinh', function() {
+Route::get('/man-hinh-chinh', function () {
     return view('home');
 });
 
@@ -40,6 +40,8 @@ Route::get('/danh-sach-sinh-vien-theo-dieu-kien/{subjectId}/{typeId}', [StudentC
 
 Route::get('/danh-sach-lop-ky-hoc/{courseID}/{teacherID}', [SubjectController::class, 'listClassInCourse'])->name('listClassInCourse');
 
-Route::get('/quay-lai', function() {
+Route::get('/quay-lai', function () {
     return redirect()->back();
 });
+
+Route::put('/danh-sach-sinh-vien-theo-tu-khoa/{subjectId}', [StudentController::class, 'listStudentByKey'])->name('listStudentByKey');

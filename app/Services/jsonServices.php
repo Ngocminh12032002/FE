@@ -41,7 +41,8 @@ class jsonServices
         return $dataObj;
     }
 
-    public function listClass($userTeacher){
+    public function listClass($userTeacher)
+    {
         $url = $this->url . '/listClass/' . $userTeacher;
         $response = Http::get($url);
         $response->throw();
@@ -50,7 +51,8 @@ class jsonServices
         return $dataObj;
     }
 
-    public function listStudent($subjectID){
+    public function listStudent($subjectID)
+    {
         $url = $this->url . '/listStudent/' . $subjectID;
         $response = Http::get($url);
         $response->throw();
@@ -59,7 +61,8 @@ class jsonServices
         return $dataObj;
     }
 
-    public function nhapdiem($id, $attendance, $test, $assignment, $exam){
+    public function nhapdiem($id, $attendance, $test, $assignment, $exam)
+    {
         $url = $this->url . '/nhapdiem/' . $id;
         // dd($url);
         $response = Http::put($url, [
@@ -74,7 +77,8 @@ class jsonServices
         return $dataObj;
     }
 
-    public function thangdiem($id, $attendanceFactor, $testFactor, $assignmentFactor, $examFactor){
+    public function thangdiem($id, $attendanceFactor, $testFactor, $assignmentFactor, $examFactor)
+    {
         $url = $this->url . '/thangdiem/' . $id;
         $response = Http::put($url, [
             'attendanceFactor' => $attendanceFactor,
@@ -88,7 +92,8 @@ class jsonServices
         return $dataObj;
     }
 
-    public function listStudentByCondition($subjectID, $condition){
+    public function listStudentByCondition($subjectID, $condition)
+    {
         $url = $this->url . '/listStudentByCondition/' . $subjectID;
         // dd($condition);
         $response = Http::put($url, [
@@ -100,14 +105,28 @@ class jsonServices
         return $dataObj;
     }
 
-    public function listClassByCourse ($courseId, $teacherID) {
-        $url = $this->url . '/listClassByCourse/' . $courseId . "/" . $teacherID ;
+    public function listClassByCourse($courseId, $teacherID)
+    {
+        $url = $this->url . '/listClassByCourse/' . $courseId . "/" . $teacherID;
         $response = Http::get($url);
         $data = $response->json();
         $dataObj = $this->_toObject($data);
         return $dataObj;
     }
 
+    public function listStudentByKey($subjectID, $condition, $keyword)
+    {
+        $url = $this->url . '/listStudentByKey/' . $subjectID;
+        // dd($condition);
+        $response = Http::put($url, [
+            'condition' => $condition,
+            'keyword' => $keyword,
+        ]);
+        $response->throw();
+        $data = $response->json();
+        $dataObj = $this->_toObject($data);
+        return $dataObj;
+    }
 
 
 
