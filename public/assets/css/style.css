@@ -1885,6 +1885,7 @@ th {
 }
 
 .modal-title1 {
+    color: var(--primary-color);
     text-transform: uppercase;
     font-weight: 500;
 }
@@ -2647,7 +2648,7 @@ ul.modal_upload-list li:last-child {
     list-style: disc;
 }
 
-/* .changeLog-items {    
+/* .changeLog-items {
 } */
 
 /* Control */

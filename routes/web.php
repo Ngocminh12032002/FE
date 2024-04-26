@@ -45,3 +45,7 @@ Route::get('/quay-lai', function () {
 });
 
 Route::put('/danh-sach-sinh-vien-theo-tu-khoa/{subjectId}', [StudentController::class, 'listStudentByKey'])->name('listStudentByKey');
+
+Route::get('/download-sample-diem/{id}', [StudentController::class, 'downloadSample'])->name('downloadSample');
+
+Route::post('/import-diem', [StudentController::class, 'import'])->name('import');

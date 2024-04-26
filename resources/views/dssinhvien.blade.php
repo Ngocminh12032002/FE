@@ -169,13 +169,14 @@
                                                 </form>
                                             </div>
 
-                                            <!-- <div class="action_export mx-3 order-md-3" data-bs-toggle="tooltip"
-                                                data-bs-placement="top" title="Lọc">
+                                            <div class="action_export mx-3 order-md-3" data-bs-toggle="tooltip"
+                                                data-bs-placement="top" title="Nhập/Xuất Excel">
                                                 <button class="btn btn-outline-danger" data-bs-toggle="modal"
-                                                    data-bs-target="#filterOptions">
-                                                    <i class="bi bi-funnel"></i>
+                                                    data-bs-target="#excelOptions">
+                                                    <i class="bi bi-download"></i>
                                                 </button>
-                                            </div> -->
+                                                <!-- <a role="button" target="_blank" class="btn-export"><i class="bi bi-download"></i></a> -->
+                                            </div>
 
                                         </div>
 
@@ -250,35 +251,27 @@
                                                     </td>
                                                     <td>
                                                         <div class="overText text-center  " data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="">
-                                                            <input class="input-edit-value txtScr" type="text" value="{{ !empty($value->mark->attendance) ? $value->mark->attendance : '' }}">
-
+                                                            {{ !empty($value->mark->attendance) ? $value->mark->attendance : '' }}
                                                         </div>
                                                     </td>
                                                     <td>
                                                         <div class="overText text-center " data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="">
-                                                            <input class="input-edit-value txtScr" type="text" value="{{ !empty($value->mark->test) ? $value->mark->test : '' }}">
-
+                                                            {{ !empty($value->mark->test) ? $value->mark->test : '' }}
                                                         </div>
                                                     </td>
                                                     <td>
                                                         <div class="overText text-center " data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="">
-
-                                                            <input class="input-edit-value txtScr" type="text" value="{{ !empty($value->mark->assignment) ? $value->mark->assignment : '' }}">
-
+                                                            {{ !empty($value->mark->assignment) ? $value->mark->assignment : '' }}
                                                         </div>
                                                     </td>
                                                     <td>
                                                         <div class="overText text-center " data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="">
-
-                                                            <input class="input-edit-value txtScr" type="text" value="{{ !empty($value->mark->exam) ? $value->mark->exam : '' }}">
-
+                                                            {{ !empty($value->mark->exam) ? $value->mark->exam : '' }}
                                                         </div>
                                                     </td>
                                                     <td>
                                                         <div class="overText text-center" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="">
-
                                                             <input readonly class="input-edit-value" type="text" value="{{ !empty($value->mark->gpa) ? $value->mark->gpa : '' }}">
-
                                                         </div>
                                                     </td>
                                                     <td>
@@ -485,43 +478,151 @@
 
 
 
-    <!-- Lọc  -->
-    @foreach ($listStudent as $value)
-    <div class="modal fade" id="filterOptions" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered modal-sm">
+    <!-- Thao tác Excel  -->
+    <div class="modal fade" id="excelOptions" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header text-center">
-                    <h5 class="modal-title w-100" id="exampleModalLabel">Lọc dữ liệu</h5>
+                    <h2 class="modal-title w-100" id="exampleModalLabel">Nhập/ Xuất điểm sinh viên</h2>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <form method="POST" action="">
+
+                <form action="{{ route('import') }}" method="POST" enctype="multipart/form-data">
                     @csrf
-                    @method('PUT')
                     <div class="modal-body">
-                        <div class="row">
-                            <div class="col-12 mb-3">
-                                <div data-bs-toggle="tooltip" data-bs-placement="top"
-                                    data-bs-original-title="Lọc theo điều kiện">
-                                    <select id="condition" class="selectpicker" data-dropup-auto="false"
-                                        title="Lọc theo điều kiện" name='condition'>
-                                        <option value="0">Tất cả sinh viên</option>
-                                        <option value="1">Đủ điều kiện dự thi</option>
-                                        <option value="2">Không đủ điều kiện dự thi</option>
-                                    </select>
+                        <div class="create_user-wrapper">
+                            <div class="row align-items-center">
+                                <div class="col-md-12">
+                                    <div class="d-flex flex-column justify-content-center align align-items-center mb-3">
+                                        <div class="upload_wrapper-items">
+                                            <a href="{{ route('downloadSample', $subjectClassID) }}" class="modal-title1">
+                                                Bấm vào đây để tải file mẫu về
+                                            </a>
+                                        </div>
+                                    </div>
                                 </div>
+                                <div class="col-md-12">
+                                    <div class="d-flex flex-column justify-content-center align align-items-center">
+                                        <div class="upload_wrapper-items">
+                                            <button role="button" type="button"
+                                                class="btn position-relative border d-flex w-100">
+                                                <img style="width:16px;height:16px"
+                                                    src="{{ asset('assets/img/upload-file.svg') }}" />
+                                                <span class="ps-2">Đính kèm file</span>
+                                                <input required accept=".xlsx" role="button" type="file"
+                                                    class="modal_upload-input modal_upload-file" name="fileUrl"
+                                                    onchange="updateList(event)" />
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <ul class="modal_upload-list"
+                                        style="max-height: 200px; overflow-y: scroll; overflow-x: hidden;">
+                                    </ul>
+                                </div>
+
                             </div>
                         </div>
-                        <div class="modal-footer justify-content-between">
-                            <button type="reset" class="btn btn-outline-danger">Làm
-                                mới</button>
-                            <button type="submit" class="btn btn-danger">Lọc</button>
-                        </div>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-outline-danger test_cancel"
+                            data-bs-dismiss="modal">Hủy</button>
+                        <button type="submit" class="btn btn-danger test_save">Lưu</button>
                     </div>
                 </form>
             </div>
         </div>
     </div>
-    @endforeach
+    <script>
+        updateList = function(e) {
+            const input = e.target;
+            const outPut = input.parentNode.parentNode.parentNode.parentNode.parentNode.querySelector(
+                '.modal_upload-list');
+            console.log(outPut);
+            const notSupport = outPut.parentNode.parentNode.querySelector('.alertNotSupport');
+
+            let children = '';
+            // const allowedTypes = ['application/pdf'];
+            // const allowedExtensions = ['.pdf'];
+            const maxFileSize = 10485760; //10MB in bytes
+
+            for (let i = 0; i < input.files.length; ++i) {
+                const file = input.files.item(i);
+                // if (file.size <= maxFileSize && allowedTypes.includes(file.type) && allowedExtensions.includes(
+                //         getFileExtension(file.name))) {
+                if (file.size <= maxFileSize) {
+                    children += `<li>
+                        <span class="fs-5">
+                            <i class="bi bi-link-45deg"></i> ${file.name}
+                        </span>
+                        <span class="modal_upload-remote" onclick="removeFileFromFileList(event, ${i})">
+                            <img style="width:18px;height:18px" src="{{ asset('assets/img/trash.svg') }}" />
+                        </span>
+                    </li>`;
+                } else {
+
+                    notSupport.style.display = 'block';
+                    //remove all files from input
+                    input.value = '';
+
+                    setTimeout(() => {
+                        notSupport.style.display = 'none';
+                    }, 5000);
+                }
+            }
+            outPut.innerHTML = children;
+        }
+
+        //delete file from input
+        function removeFileFromFileList(event, index) {
+            const deleteButton = event.target;
+            //get tag name
+            const tagName = deleteButton.tagName.toLowerCase();
+            let liEl;
+            if (tagName == "img") {
+                liEl = deleteButton.parentNode.parentNode;
+            }
+            if (tagName == "span") {
+                liEl = deleteButton.parentNode;
+            }
+
+            const inputEl = liEl.parentNode.parentNode.parentNode.querySelector('.modal_upload-input');
+            const dt = new DataTransfer()
+
+            const {
+                files
+            } = inputEl
+
+            for (let i = 0; i < files.length; i++) {
+                const file = files[i]
+                if (index !== i)
+                    dt.items.add(file) // here you exclude the file. thus removing it.
+            }
+
+            inputEl.files = dt.files // Assign the updates list
+            liEl.remove();
+        }
+
+        function removeUploaded(event) {
+            const deleteButton = event.target;
+            //get tag name
+            const tagName = deleteButton.tagName.toLowerCase();
+            let liEl;
+            if (tagName == "img") {
+                liEl = deleteButton.parentNode.parentNode;
+            }
+            if (tagName == "span") {
+                liEl = deleteButton.parentNode;
+            }
+            liEl.remove();
+        }
+
+        function getFileExtension(filename) {
+            return '.' + filename.split('.').pop();
+        }
+    </script>
 
 
 
@@ -532,6 +633,7 @@
         src="https://cdn.datatables.net/fixedcolumns/4.2.2/js/dataTables.fixedColumns.min.js"></script>
     <script type="text/javascript" src="{{ asset('assets/plugins/jquery-repeater/repeater.min.js') }}"></script>
     <script type="text/javascript" src="{{ asset('assets/plugins/jquery-repeater/custom-repeater.js') }}"></script>
+
 
 
 @endsection
