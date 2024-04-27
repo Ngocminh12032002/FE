@@ -496,7 +496,7 @@
                                     <div class="d-flex flex-column justify-content-center align align-items-center mb-3">
                                         <div class="upload_wrapper-items">
                                             <a href="{{ route('downloadSample', $subjectClassID) }}" class="modal-title1">
-                                                Bấm vào đây để tải file mẫu về
+                                                Bấm vào đây để tải file điểm
                                             </a>
                                         </div>
                                     </div>
