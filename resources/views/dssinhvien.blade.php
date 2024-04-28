@@ -465,6 +465,33 @@
                 });
             });
 
+            var form = document.getElementById('formNhapdiem_{{ $value->student->id }}');
+            form.addEventListener('submit', function(event) {
+                var inputs = form.querySelectorAll('input[type="text"]');
+                var isValid = true;
+
+                inputs.forEach(function(input) {
+                    var value = input.value;
+                    var fieldName = input.name;
+                    var studentId = '{{ $value->student->id }}';
+                    var errorMessageId = fieldName + 'Error_' + studentId;
+
+                    if (!isValidInput(value)) {
+                        document.getElementById(errorMessageId).innerText = "Trường điểm phải là số từ 0 đến 10";
+                        isValid = false;
+                        input.value = '';
+                        input.focus();
+                    } else {
+                        document.getElementById(errorMessageId).innerText = ""; // Xóa cảnh báo nếu giá trị hợp lệ
+                    }
+                });
+
+                if (!isValid) {
+                    event.preventDefault(); // Ngăn chặn form submit nếu có lỗi
+                }
+            });
+
+
             function isValidInput(value) {
                 if (isNaN(value)) {
                     return false;
